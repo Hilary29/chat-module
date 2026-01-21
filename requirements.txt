@@ -4,3 +4,4 @@ chromadb
 gradio
 pymupdf
 langchain_ollama
+langchain-google-genai

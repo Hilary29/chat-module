@@ -1,11 +1,11 @@
-import re
 import gradio as gr
 import os
 
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from langchain_ollama import OllamaEmbeddings, OllamaLLM
+from langchain_ollama import OllamaEmbeddings
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
@@ -24,7 +24,7 @@ print(f"Created {len(chunks)} chunks.")
 # Embeddings & LLM
 print("Setting up embeddings and LLM...")
 embedding_function = OllamaEmbeddings(model="nomic-embed-text", base_url=OLLAMA_BASE_URL)
-llm = OllamaLLM(model="deepseek-r1:1.5b", base_url=OLLAMA_BASE_URL)
+llm = ChatGoogleGenerativeAI(model="gemini-3-flash-preview", temperature=0)
 
 # Vector store
 vectorstore = Chroma.from_documents(
@@ -55,10 +55,7 @@ Question:
 """
 
     response = llm.invoke(prompt)
-
-    # Remove DeepSeek thinking traces
-    response = re.sub(r"<think>.*?</think>", "", response, flags=re.DOTALL).strip()
-    return response
+    return response.content
 
 # Gradio UI
 interface = gr.Interface(
@@ -66,7 +63,7 @@ interface = gr.Interface(
     inputs="text",
     outputs="text",
     title="RAG Chatbot: Comprehensive Guide to Rugby",
-    description="Ask questions about the Comprehensive Guide to Rugby book. Made by Christian and Omar. Powered by DeepSeek-R1."
+    description="Ask questions about the Comprehensive Guide to Rugby book."
 )
 print("Launching interface...")
 interface.launch(server_name="0.0.0.0", server_port=7860, share=False)
