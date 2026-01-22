@@ -6,7 +6,6 @@ Chatbot **RAG (Retrieval-Augmented Generation)** pour le service client, constru
 - **ChromaDB** - Base de donnees vectorielle
 - **Ollama** - Embeddings locaux (nomic-embed-text)
 - **Google Gemini** - LLM (gemini-3-flash-preview)
-- **Gradio** - Interface web
 - **Pandas** - Chargement des donnees Excel
 
 Le chatbot repond aux questions en utilisant une base de connaissances chargee depuis un fichier Excel.
@@ -67,7 +66,6 @@ docker compose up --build
 
 Cela demarre :
 - **Ollama** (serveur d'embeddings sur le port 11434)
-- **Application RAG + Gradio** (port 7860)
 
 ### 4. Telecharger le modele d'embeddings (premiere execution uniquement)
 
@@ -121,7 +119,6 @@ docker compose down -v
 | ChromaDB | Stockage vectoriel |
 | Ollama | Embeddings (nomic-embed-text) |
 | Google Gemini | LLM (gemini-3-flash-preview) |
-| Gradio | Interface utilisateur |
 | Pandas/openpyxl | Lecture fichiers Excel |
 | Docker | Conteneurisation |
 

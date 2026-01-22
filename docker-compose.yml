@@ -7,17 +7,26 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
-  rag-app:
+  rag-api:
     build: .
-    container_name: rag-rugby
+    container_name: rag-api
     depends_on:
-      - ollama
+      ollama:
+        condition: service_healthy
     ports:
-      - "7860:7860"
+      - "8000:8000"
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - CHROMA_PERSIST_DIRECTORY=/app/chroma_db
+      - EXCEL_FILE_PATH=/app/data/Modele_RAG_ServiceClient.xlsx
     volumes:
       - chroma_data:/app/chroma_db
     restart: unless-stopped

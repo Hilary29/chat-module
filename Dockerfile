@@ -1,6 +1,8 @@
 FROM python:3.11-slim
 
-# System deps for PyMuPDF
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 RUN apt-get update && apt-get install -y \
     build-essential \
     libgl1 \
@@ -11,10 +13,15 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY app/ ./app/
+COPY data/ ./data/
 
-EXPOSE 7860
+EXPOSE 8000
 
-CMD ["python", "main.py"]
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/api/v1/health/live || exit 1
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
