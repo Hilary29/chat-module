@@ -15,10 +15,10 @@ class RAGPipeline:
         context = "\n\n".join(doc.page_content for doc in docs)
 
         prompt = f"""
-You are a helpful assistant pour le service client.
-Repondez a la question en utilisant uniquement le contexte ci-dessous.
+Tu es assistant pour le service client d'une application bancaire.
+Réponds en te basant sur le contexte ci-dessous.
 Si plusieurs reponses correspondent, choisissez la plus precise.
-Si la reponse ne se trouve pas dans le contexte, dites que vous ne savez pas.
+Si la reponse ne se trouve pas dans le contexte, dis que tu n'es pas en mesure de répondre et demande si le client souhaite discuter avec un agent.
 
 Context:
 {context}
@@ -47,11 +47,6 @@ Question:
                 for doc in docs
             ]
         }
-
-    def ask_simple(self, question: str) -> str:
-        """Version simplifiee retournant uniquement la reponse textuelle."""
-        result = self.ask(question)
-        return result["answer"]
 
 
 _pipeline_instance: Optional[RAGPipeline] = None

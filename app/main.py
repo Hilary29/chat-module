@@ -17,7 +17,6 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Gestion du cycle de vie de l'application."""
     logger.info("Demarrage de l'application...")
     settings = get_settings()
 
@@ -43,10 +42,7 @@ app = FastAPI(
     title="Service Client RAG Chatbot API",
     description="API REST pour le chatbot RAG du service client.",
     version="1.0.0",
-    lifespan=lifespan,
-    docs_url="/docs",
-    redoc_url="/redoc",
-    openapi_url="/openapi.json"
+    lifespan=lifespan
 )
 
 app.add_middleware(
@@ -61,22 +57,6 @@ app.include_router(chat.router, prefix="/api/v1")
 app.include_router(health.router, prefix="/api/v1")
 
 
-@app.get("/", tags=["Root"])
-async def root():
-    """Endpoint racine avec informations de base."""
-    return {
-        "name": "Service Client RAG Chatbot API",
-        "version": "1.0.0",
-        "docs": "/docs",
-        "health": "/api/v1/health"
-    }
-
-
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(
-        "app.main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=False
-    )
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=False)
