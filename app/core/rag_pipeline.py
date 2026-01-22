@@ -2,9 +2,6 @@ from app.core.vectorstore import VectorStoreManager
 from app.core.llm import get_llm
 from app.config import get_settings
 from typing import Dict, Any, Optional
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class RAGPipeline:
@@ -33,13 +30,16 @@ Question:
 
         response = self.llm.invoke(prompt)
 
-        logger.info(f"LLM Response type: {type(response)}")
-        logger.info(f"LLM Response: {response}")
-        logger.info(f"LLM Response content: {response.content}")
-        logger.info(f"LLM Response dir: {[attr for attr in dir(response) if not attr.startswith('_')]}")
+        # Extraire le texte de la reponse
+        if isinstance(response.content, list) and len(response.content) > 0:
+            answer = response.content[0].get('text', '')
+        elif isinstance(response.content, str):
+            answer = response.content
+        else:
+            answer = str(response.content)
 
         return {
-            "answer": response,
+            "answer": answer,
             "sources": [
                 {
                     "content": doc.page_content,
