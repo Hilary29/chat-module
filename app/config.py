@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     ollama_model: str = "nomic-embed-text"
 
     # Google Gemini
-    google_api_key: str = "AIzaSyAGjYvgx8652vipMkxUEnI3sH9jtkfSDnM"
+    google_api_key: str = ""
     gemini_model: str = "gemini-3-flash-preview"
     gemini_temperature: float = 0.0
 

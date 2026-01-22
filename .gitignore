@@ -1,0 +1,41 @@
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ChromaDB (base de donnees vectorielle)
+chroma_db/
+
+# Gradio
+.gradio/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/

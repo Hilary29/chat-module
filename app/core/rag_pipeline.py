@@ -11,7 +11,6 @@ class RAGPipeline:
         self.llm = get_llm()
 
     def ask(self, question: str) -> Dict[str, Any]:
-        """Execute le pipeline RAG et retourne la reponse avec contexte."""
         docs = self.retriever.invoke(question)
         context = "\n\n".join(doc.page_content for doc in docs)
 
