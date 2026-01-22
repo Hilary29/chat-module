@@ -1,117 +1,133 @@
-# 🏉 RAG Rugby Chatbot (Dockerized)
+# RAG Chatbot - Service Client (Dockerized)
 
-This project is a **Retrieval-Augmented Generation (RAG) chatbot** built with:
+Chatbot **RAG (Retrieval-Augmented Generation)** pour le service client, construit avec :
 
-- **LangChain**
-- **ChromaDB**
-- **Ollama**
-- **DeepSeek-R1**
-- **Gradio**
+- **LangChain** - Framework pour applications LLM
+- **ChromaDB** - Base de donnees vectorielle
+- **Ollama** - Embeddings locaux (nomic-embed-text)
+- **Google Gemini** - LLM (gemini-3-flash-preview)
+- **Gradio** - Interface web
+- **Pandas** - Chargement des donnees Excel
 
-It allows you to ask questions about the book **“Comprendre le Rugby”** using a local LLM.
-
-The project is fully **Dockerized**, so it can run on **any computer** without installing Python or dependencies manually.
-
----
-
-## 📁 Project Structure
-
+Le chatbot repond aux questions en utilisant une base de connaissances chargee depuis un fichier Excel.
 
 ---
 
-## ⚙️ Requirements
+## Structure du Projet
 
-You only need:
+```
+.
+├── main.py                         # Application principale
+├── Modele_RAG_ServiceClient.xlsx   # Base de connaissances (FAQ service client)
+├── chroma_db/                      # Base de donnees vectorielle persistante
+├── Dockerfile                      # Image Docker de l'application
+├── docker-compose.yml              # Orchestration des services
+├── requirements.txt                # Dependances Python
+└── readme.md
+```
 
-- **Docker**
-- **Docker Compose**
+---
 
-### Check installation
+## Prerequis
+
+- **Docker** et **Docker Compose**
+- **Cle API Google** (pour Gemini)
+
+### Verifier l'installation
 
 ```bash
 docker --version
 docker compose --version
+```
 
-🚀 How to Launch the Project
-1️⃣ Clone the repository
+---
 
-git clone <your-repository-url>
-cd rag-rugby
+## Lancement du Projet
 
-2️⃣ Build and start all services
+### 1. Cloner le depot
+
+```bash
+git clone <url-du-repository>
+cd chat-bot-RAG-Rugby--christian
+```
+
+### 2. Configurer la cle API Google
+
+Creer un fichier `.env` a la racine du projet :
+
+```bash
+GOOGLE_API_KEY=votre_cle_api_google
+```
+
+### 3. Construire et demarrer les services
+
+```bash
 docker compose up --build
-This will start:
+```
 
-Ollama (LLM server)
+Cela demarre :
+- **Ollama** (serveur d'embeddings sur le port 11434)
+- **Application RAG + Gradio** (port 7860)
 
-The RAG + Gradio application
+### 4. Telecharger le modele d'embeddings (premiere execution uniquement)
 
-ChromaDB (persistent vector store)
-3️⃣ Download required models (first run only)
+Dans un nouveau terminal :
 
-Open a new terminal and run:
-
-docker exec -it ollama ollama pull deepseek-r1
+```bash
 docker exec -it ollama ollama pull nomic-embed-text
-The models are stored in a Docker volume and will not be downloaded again.
+```
 
-4️⃣ Open the application
-Once everything is running, open your browser:
-http://localhost:7860
+### 5. Acceder a l'application
 
-You can now ask questions about the rugby book.
+Ouvrir dans le navigateur : **http://localhost:7860**
 
-💾 Data Persistence
+---
 
-The following data is persisted automatically using Docker volumes:
+## Persistance des Donnees
 
-Ollama models
+Les donnees sont persistees via des volumes Docker :
 
-Chroma vector database
+| Volume | Contenu |
+|--------|---------|
+| `ollama_data` | Modeles Ollama |
+| `chroma_data` | Base vectorielle ChromaDB |
 
-Stopping or restarting containers will not delete embeddings or models.
+Arreter ou redemarrer les conteneurs ne supprime pas les donnees.
 
-🛑 Stop the Project
+---
 
-To stop all services:
+## Arreter le Projet
 
-docker-compose down
+Arreter les services :
 
+```bash
+docker compose down
+```
 
-To stop and remove volumes (⚠️ deletes models and embeddings):
+Arreter et supprimer les volumes (supprime modeles et embeddings) :
 
-docker-compose down -v
+```bash
+docker compose down -v
+```
 
-🧠 Technologies Used
+---
 
-Python 3.11
+## Technologies
 
-LangChain
+| Technologie | Utilisation |
+|-------------|-------------|
+| Python 3.11 | Langage principal |
+| LangChain | Framework RAG |
+| ChromaDB | Stockage vectoriel |
+| Ollama | Embeddings (nomic-embed-text) |
+| Google Gemini | LLM (gemini-3-flash-preview) |
+| Gradio | Interface utilisateur |
+| Pandas/openpyxl | Lecture fichiers Excel |
+| Docker | Conteneurisation |
 
-ChromaDB
+---
 
-Ollama
+## Notes
 
-DeepSeek-R1
-
-Gradio
-
-Docker & Docker Compose
-
-📌 Notes
-
-The PDF file must remain inside the app/ folder.
-
-First startup may be slow due to model downloads.
-
-Works on Windows, macOS, and Linux.
-
-👥 Authors
-
-Christian
-
-Omar
-
-📄 License
-
-This project is for educational and academic use.
+- Le fichier Excel `Modele_RAG_ServiceClient.xlsx` doit contenir les colonnes : `category`, `intent`, `question`, `answer`, `context`
+- Le premier demarrage peut etre lent (telechargement des modeles)

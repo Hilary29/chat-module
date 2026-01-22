@@ -1,7 +1,10 @@
 langchain
 langchain-community
+langchain-core
 chromadb
 gradio
 pymupdf
 langchain_ollama
 langchain-google-genai
+pandas
+openpyxl
