@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.schemas.chat import ChatRequest, ChatResponse, SourceDocument, ErrorResponse
+from app.schemas.chat import ChatRequest, ChatResponse, SourceDocument, ErrorResponse, IntentType
 from app.core.rag_pipeline import get_rag_pipeline
 import logging
 
@@ -23,12 +23,15 @@ async def ask_question(request: ChatRequest):
                 SourceDocument(
                     content=src["content"],
                     category=src["metadata"].get("category"),
-                    intent=src["metadata"].get("intent")
                 )
                 for src in result["sources"]
             ]
 
-        return ChatResponse(answer=result["answer"], sources=sources)
+        return ChatResponse(
+            answer=result["answer"],
+            intent=IntentType(result["intent"]),
+            sources=sources
+        )
 
     except Exception as e:
         logger.error(f"Erreur lors du traitement de la question: {e}")

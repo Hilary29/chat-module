@@ -1,5 +1,13 @@
+from enum import Enum
 from pydantic import BaseModel, Field
 from typing import List, Optional
+
+
+class IntentType(str, Enum):
+    """Types d'intention detectes par le chatbot."""
+    GREETING = "greeting"
+    SERVICE_CLIENT = "service_client"
+    OTHER = "other"
 
 
 class ChatRequest(BaseModel):
@@ -23,6 +31,7 @@ class SourceDocument(BaseModel):
 
 class ChatResponse(BaseModel):
     answer: str = Field(..., description="Reponse du chatbot")
+    intent: IntentType = Field(..., description="Intention detectee")
     sources: Optional[List[SourceDocument]] = Field(
         default=None,
         description="Documents sources utilises"
